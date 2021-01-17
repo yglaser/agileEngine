@@ -1,0 +1,26 @@
+<div
+  class="container"
+  infiniteScroll
+  [infiniteScrollDistance]="8"
+  (scrolled)="onScroll()"
+>
+  <ng-container *ngIf="images.length > 0; else spinner">
+    <div class="mt-2">
+      <div class="row row-eq-height d-flex justify-content-center">
+        <div
+          class="col-12 pr-lg-2 col-lg-3 col-xl-3 mb-3"
+          *ngFor="let picture of images; let i = index"
+        >
+          <div class="h-100 m-2" [class.selected]="i === indexSelected">
+            <img
+              [src]="picture.cropped_picture"
+              (click)="goToDetails(picture.id, i)"
+              class="p-2 img-fluid"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+<ng-template> Loading ... </ng-template>
