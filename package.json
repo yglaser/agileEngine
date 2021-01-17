@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
+    "build-ghpages": "ng build --prod --output-path docs --base-href /agileEngine/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -12,7 +13,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged && ng lint ",
-      "pre-push": "npm run build"
+      "pre-push": "npm run build-ghpages"
     }
   },
   "private": true,
