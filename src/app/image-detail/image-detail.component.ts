@@ -18,7 +18,7 @@ export class ImageDetailComponent implements OnInit {
   @Output() idToFind: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: DataModal,
+    @Inject(MAT_DIALOG_DATA) public data: PictureDetail,
     config: NgbCarouselConfig,
     private imageService: ImageService
   ) {
