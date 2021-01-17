@@ -14,20 +14,10 @@ import { InterceptorService } from 'src/services/interceptor.service';
 
 @NgModule({
   declarations: [ImageDetailComponent],
-  imports: [
-    CommonModule,
-    MatDialogModule,
-    CoremodulelibModule.forRoot(environment.API),
-    NgbModule,
-  ],
+  imports: [CommonModule, MatDialogModule, NgbModule],
   providers: [
     { provide: MAT_DIALOG_DATA, useValue: {} },
     { provide: MatDialogRef, useValue: {} },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: InterceptorService,
-      multi: true,
-    },
   ],
   exports: [ImageDetailComponent],
 })

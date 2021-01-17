@@ -25,9 +25,6 @@ export class AppComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.login();
-    if (this.authService.isLoggedIn()) {
-      this.getAllImages(this.actualPage);
-    }
   }
 
   public getAllImages(currentPage: number): void {
@@ -41,14 +38,8 @@ export class AppComponent implements OnInit {
           this.totalPage = res.pageCount;
         },
         (err) => {
-          if (err[1].status === 401) {
-            this.login();
-          } else {
-            console.log(err.error);
-            this.login();
-            this.toastService.error('Images', 'Error loading images');
-            this.loading = false;
-          }
+          console.log(err);
+          // this.login()
         }
       );
     } else {
@@ -63,7 +54,8 @@ export class AppComponent implements OnInit {
     observable.subscribe(
       (response: LoginResponse) => {
         this.authService.saveResLoginData(response);
-        this.loading = false;
+        // this.loading = false;
+        this.getAllImages(this.actualPage);
       },
       (err) => {
         console.log(err);
