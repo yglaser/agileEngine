@@ -25,25 +25,26 @@ export class AppComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.login();
+    if (this.authService.isLoggedIn) {
+      this.getAllImages(this.actualPage);
+    }
   }
 
   public getAllImages(currentPage: number): void {
+    console.log('hola');
     this.loading = true;
-    if (this.authService.isLoggedIn) {
-      this.imageService.getAllPictures(currentPage).subscribe(
-        (res: Pictures) => {
-          this.loading = false;
-          this.images.push(...res.pictures);
-          this.morePages = res.hasMore;
-          this.totalPage = res.pageCount;
-        },
-        (err) => {
-          this.login();
-        }
-      );
-    } else {
-      this.login();
-    }
+
+    this.imageService.getAllPictures(currentPage).subscribe(
+      (res: Pictures) => {
+        this.loading = false;
+        this.images.push(...res.pictures);
+        this.morePages = res.hasMore;
+        this.totalPage = res.pageCount;
+      },
+      (err) => {
+        this.login();
+      }
+    );
   }
   public login(): void {
     this.loading = true;
@@ -53,7 +54,7 @@ export class AppComponent implements OnInit {
     observable.subscribe(
       (response: LoginResponse) => {
         this.authService.saveResLoginData(response);
-        // this.loading = false;
+
         this.getAllImages(this.actualPage);
       },
       (err) => {

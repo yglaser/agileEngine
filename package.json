@@ -12,8 +12,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged && ng lint ",
-      "pre-push": "npm run build-ghpages"
+      "pre-commit": "pretty-quick --staged && ng lint  && npm run build-ghpages ",
+      "pre-push": "npm run build"
     }
   },
   "private": true,
