@@ -7,7 +7,12 @@ import {
   Output,
 } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbCarouselConfig,
+  NgbSlideEvent,
+  NgbSlideEventDirection,
+  NgbSlideEventSource,
+} from '@ng-bootstrap/ng-bootstrap';
 import { KEY_CODE } from 'src/constants/keyEnum';
 import { DataModal, PictureDetail } from 'src/models/images';
 import { ImageService } from 'src/services/image-service.service';
@@ -25,6 +30,7 @@ export class ImageDetailComponent implements OnInit {
   public imageToShow: number;
   public indexSelected = 0;
   public id: string;
+  public loading = false;
   @Output() idToFind: EventEmitter<string> = new EventEmitter<string>();
   imagesCarrousel: PictureDetail[] = [];
   constructor(
@@ -36,6 +42,7 @@ export class ImageDetailComponent implements OnInit {
     this.id = data.imagesMin[this.indexSelected].id;
     this.goToDetails();
     config.keyboard = true;
+    config.wrap = false;
   }
 
   @HostListener('window:keydown', ['$event'])
@@ -65,7 +72,17 @@ export class ImageDetailComponent implements OnInit {
     this.goToDetails();
   }
 
+  public onSlide(slideEvent: NgbSlideEvent) {
+    console.log(slideEvent);
+    if (slideEvent.direction === NgbSlideEventDirection.LEFT) {
+      this.onLeft();
+    }
+    if (slideEvent.direction === NgbSlideEventDirection.RIGHT) {
+      this.onRight();
+    }
+  }
   public goToDetails() {
+    this.loading = true;
     if (this.imagesCarrousel.findIndex((el) => el.id === this.id) === -1) {
       this.imageService
         .getPictureById(this.id)

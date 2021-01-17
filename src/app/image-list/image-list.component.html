@@ -4,7 +4,7 @@
   [infiniteScrollDistance]="8"
   (scrolled)="onScroll()"
 >
-  <ng-container *ngIf="images.length > 0; else spinner">
+  <ng-container *ngIf="!loading; else spinner">
     <div class="mt-2">
       <div class="row row-eq-height d-flex justify-content-center">
         <div
