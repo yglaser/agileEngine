@@ -6,15 +6,13 @@ import {
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { ImageDetailComponent } from './image-detail.component';
-import { CoremodulelibModule } from 'src/services/coremodulelib.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
-import { InterceptorService } from 'src/services/interceptor.service';
 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { NgxImageZoomModule } from 'ngx-image-zoom';
 @NgModule({
   declarations: [ImageDetailComponent],
-  imports: [CommonModule, MatDialogModule, NgbModule],
+  imports: [CommonModule, MatDialogModule, NgbModule, NgxImageZoomModule],
   providers: [
     { provide: MAT_DIALOG_DATA, useValue: {} },
     { provide: MatDialogRef, useValue: {} },

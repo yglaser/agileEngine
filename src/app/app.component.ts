@@ -38,8 +38,7 @@ export class AppComponent implements OnInit {
           this.totalPage = res.pageCount;
         },
         (err) => {
-          console.log(err);
-          // this.login()
+          this.login();
         }
       );
     } else {

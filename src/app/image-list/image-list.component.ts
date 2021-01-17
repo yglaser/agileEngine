@@ -34,10 +34,7 @@ export class ImageListComponent implements OnInit {
 
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    console.log(event);
-
     if (event.key === KEY_CODE.RIGHT_ARROW) {
-      console.log('entro...');
       if (!this.modalIsOpen) {
         this.onRight();
       }
@@ -67,17 +64,17 @@ export class ImageListComponent implements OnInit {
   }
   public goToDetails(id, i) {
     this.indexSelected = i;
-    this.imageService.getPictureById(id).subscribe((image: PictureDetail) => {
-      const dialog = this.dialog.open(ImageDetailComponent, {
-        panelClass: 'custom-dialog-container',
-        disableClose: true,
-        hasBackdrop: false,
+    const dialog = this.dialog.open(ImageDetailComponent, {
+      panelClass: 'custom-dialog-container',
+      disableClose: true,
+      hasBackdrop: false,
 
-        data: image,
-      });
-
-      dialog.afterOpened().subscribe((el) => (this.modalIsOpen = true));
-      dialog.afterClosed().subscribe((el) => (this.modalIsOpen = false));
+      data: {
+        index: this.indexSelected,
+        imagesMin: this.images,
+      },
     });
+    dialog.afterOpened().subscribe((el) => (this.modalIsOpen = true));
+    dialog.afterClosed().subscribe((el) => (this.modalIsOpen = false));
   }
 }

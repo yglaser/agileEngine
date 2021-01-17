@@ -1,6 +1,14 @@
-import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Inject,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
+import { KEY_CODE } from 'src/constants/keyEnum';
 import { DataModal, PictureDetail } from 'src/models/images';
 import { ImageService } from 'src/services/image-service.service';
 @Component({
@@ -15,47 +23,56 @@ export class ImageDetailComponent implements OnInit {
   showNavigationIndicators = false;
   public images: PictureDetail[] = [];
   public imageToShow: number;
+  public indexSelected = 0;
+  public id: string;
   @Output() idToFind: EventEmitter<string> = new EventEmitter<string>();
-
+  imagesCarrousel: PictureDetail[] = [];
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: PictureDetail,
+    @Inject(MAT_DIALOG_DATA) public data: DataModal,
     config: NgbCarouselConfig,
     private imageService: ImageService
   ) {
-    /*
-    this.indexImage = data.indexParent;
-    console.log(this.data, this.data.idDetail)
-    this.getImageDetailsById(this.data.idDetail, this.data.indexParent);
-    config.showNavigationArrows = true;
-    config.showNavigationIndicators = true;*/
+    this.indexSelected = data.index;
+    this.id = data.imagesMin[this.indexSelected].id;
+    this.goToDetails();
+    config.keyboard = true;
   }
-  ngOnInit() {}
-  /*
-  public goToNextImage(parentId) {
-    this.showNavigationArrows = !this.showNavigationArrows;
-    if (parentId === this.data.picturesMin.length - 1) {
-      this.indexImage = parentId++;
-      if (
-        this.images.findIndex((el) => el.idParentArray === this.indexImage) ===
-        -1
-      ) {
-        const idToFind = this.data.picturesMin[this.indexImage].id;
-        this.getImageDetailsById(idToFind, parentId);
-      }
+
+  @HostListener('window:keydown', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.key === KEY_CODE.RIGHT_ARROW) {
+      this.onRight();
+    }
+
+    if (event.key === KEY_CODE.LEFT_ARROW) {
+      this.onLeft();
     }
   }
 
-  public getImageDetailsById(id: string, idParent: number): void {
-    console.log(id)
-    if (this.images.findIndex((el) => el.id === id) === -1) {
-      this.imageService.getPictureById(id).subscribe((el: PictureDetail) => {
-        el.idParentArray = idParent;
-        this.images.push(el);
-      });
-    }
-    this.images.sort((a, b) => {
-      return a.idParentArray - b.idParentArray;
-    });
+  public clicked($Event) {
+    console.log($Event);
   }
-  */
+  ngOnInit() {}
+  public onLeft(): void {
+    this.indexSelected = this.indexSelected === 0 ? 0 : this.indexSelected - 1;
+    this.id = this.data.imagesMin[this.indexSelected].id;
+    this.goToDetails();
+  }
+
+  public onRight(): void {
+    this.indexSelected = this.indexSelected + 1;
+    this.id = this.data.imagesMin[this.indexSelected].id;
+    this.goToDetails();
+  }
+
+  public goToDetails() {
+    if (this.imagesCarrousel.findIndex((el) => el.id === this.id) === -1) {
+      this.imageService
+        .getPictureById(this.id)
+        .subscribe((image: PictureDetail) => {
+          image.idParentArray = this.indexSelected;
+          this.imagesCarrousel.push(image);
+        });
+    }
+  }
 }
