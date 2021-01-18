@@ -31,9 +31,7 @@ export class AppComponent implements OnInit {
   }
 
   public getAllImages(currentPage: number): void {
-    console.log('hola');
     this.loading = true;
-
     this.imageService.getAllPictures(currentPage).subscribe(
       (res: Pictures) => {
         this.loading = false;
@@ -58,8 +56,6 @@ export class AppComponent implements OnInit {
         this.getAllImages(this.actualPage);
       },
       (err) => {
-        console.log(err);
-
         this.toastService.error(err.error.messages[0], 'Login Error');
         this.loading = false;
       }
@@ -75,11 +71,5 @@ export class AppComponent implements OnInit {
       this.actualPage++;
       this.getAllImages(this.actualPage);
     }
-  }
-
-  public getImageDetails(id: string) {
-    this.imageService.getPictureById(id).subscribe((res: PictureDetail) => {
-      console.log(res);
-    });
   }
 }

@@ -1,12 +1,21 @@
 <div>
-  <ngb-carousel (slide)="onSlide($event)" *ngIf="imagesCarrousel">
-    <ng-container *ngIf="!loading; else spinner">
-      <ng-template ngbSlide *ngFor="let image of imagesCarrousel">
-        <div class="picsum-img-wrapper">
-          <img [src]="image.full_picture" alt="Random slide" />
+  <ngb-carousel *ngIf="imagesCarrousel">
+    <ng-template ngbSlide *ngFor="let image of imagesCarrousel; let i = index">
+      <ng-container *ngIf="!loading; else spinner">
+        <div *ngIf="image.idParentArray === indexSelected">
+          <lib-ngx-image-zoom
+            [thumbImage]="image.cropped_picture"
+            [fullImage]="image.full_picture"
+          ></lib-ngx-image-zoom>
         </div>
-      </ng-template>
-    </ng-container>
-    <ng-template #spinner> Loading ... </ng-template>
+      </ng-container>
+    </ng-template>
   </ngb-carousel>
 </div>
+<ng-template #spinner>
+  <div class="clearfix border-0">
+    <div class="spinner-border float-right" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+</ng-template>

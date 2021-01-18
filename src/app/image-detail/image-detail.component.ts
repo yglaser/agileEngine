@@ -56,39 +56,29 @@ export class ImageDetailComponent implements OnInit {
     }
   }
 
-  public clicked($Event) {
-    console.log($Event);
-  }
   ngOnInit() {}
   public onLeft(): void {
+    this.loading = true;
     this.indexSelected = this.indexSelected === 0 ? 0 : this.indexSelected - 1;
     this.id = this.data.imagesMin[this.indexSelected].id;
     this.goToDetails();
   }
 
   public onRight(): void {
+    this.loading = true;
     this.indexSelected = this.indexSelected + 1;
     this.id = this.data.imagesMin[this.indexSelected].id;
     this.goToDetails();
   }
 
-  public onSlide(slideEvent: NgbSlideEvent) {
-    console.log(slideEvent);
-    if (slideEvent.direction === NgbSlideEventDirection.LEFT) {
-      this.onLeft();
-    }
-    if (slideEvent.direction === NgbSlideEventDirection.RIGHT) {
-      this.onRight();
-    }
-  }
   public goToDetails() {
-    this.loading = true;
     if (this.imagesCarrousel.findIndex((el) => el.id === this.id) === -1) {
       this.imageService
         .getPictureById(this.id)
         .subscribe((image: PictureDetail) => {
           image.idParentArray = this.indexSelected;
           this.imagesCarrousel.push(image);
+          this.loading = false;
         });
     }
   }

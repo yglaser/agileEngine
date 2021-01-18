@@ -9686,8 +9686,7 @@
           return !!this.getToken();
         }
         saveResLoginData(t) {
-          console.log('liz'),
-            this.localStorageService.setItem('token', t.token);
+          this.localStorageService.setItem('token', t.token);
         }
       }
       class Bl {
@@ -9727,8 +9726,7 @@
             this.authService.isLoggedIn && this.getAllImages(this.actualPage);
         }
         getAllImages(t) {
-          console.log('hola'),
-            (this.loading = !0),
+          (this.loading = !0),
             this.imageService.getAllPictures(t).subscribe(
               (t) => {
                 (this.loading = !1),

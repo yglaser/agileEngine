@@ -29,7 +29,6 @@ export class AuthenticationService {
   }
 
   public saveResLoginData(loginResponse: any): void {
-    console.log('liz');
     this.localStorageService.setItem(TOKEN_APP, loginResponse.token);
   }
 }
