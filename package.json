@@ -3,8 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start-dev": "ng serve --proxy-config proxy.conf.json",
-    "start": "node server.js",
+    "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
     "build-ghpages": "ng build --prod --output-path docs --base-href /agileEngine/",
     "test": "ng test",
@@ -20,7 +19,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged && ng lint ",
-      "pre-push": "npm run build"
+      "pre-push": "npm run build && ng test"
     }
   },
   "private": true,

@@ -1,21 +1,37 @@
-<div>
-  <ngb-carousel *ngIf="imagesCarrousel">
-    <ng-template ngbSlide *ngFor="let image of imagesCarrousel; let i = index">
-      <ng-container *ngIf="!loading; else spinner">
-        <div *ngIf="image.idParentArray === indexSelected">
+<ng-container>
+  <ngb-carousel #caro (slide)="onSlide($event, caro)" *ngIf="data.imagesMin">
+    <div class="mb-2 row d-flex d-inline justify-content-end">
+      <img
+        [mat-dialog-close]="true"
+        style="color: #707070"
+        mat-list-icon
+        src="assets/img/close-black.svg"
+        alt="close"
+      />
+    </div>
+
+    <ng-template ngbSlide *ngFor="let image of data.imagesMin; let i = index">
+      <ng-container *ngIf="actualImage; else carrousel">
+        <div class="picsum-img-wrapper">
           <lib-ngx-image-zoom
-            [thumbImage]="image.cropped_picture"
-            [fullImage]="image.full_picture"
+            [thumbImage]="actualImage.cropped_picture"
+            [fullImage]="actualImage.full_picture"
           ></lib-ngx-image-zoom>
         </div>
+        <div class="carousel-caption">
+          <p class="py-0 my-0">
+            Author: {{ actualImage.author }} <br />
+            Camera: {{ actualImage.camera }} <br />
+            {{ actualImage.tags }}<br />
+          </p>
+        </div>
       </ng-container>
+      <ng-template #carrousel>
+        <img
+          [src]="image.cropped_picture"
+          (mouseover)="this.goToDetails(image.id)"
+        />
+      </ng-template>
     </ng-template>
   </ngb-carousel>
-</div>
-<ng-template #spinner>
-  <div class="clearfix border-0">
-    <div class="spinner-border float-right" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
-  </div>
-</ng-template>
+</ng-container>

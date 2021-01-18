@@ -11,11 +11,6 @@ export interface Picture {
 }
 
 export interface DataModal {
-  // picturesMin: Picture[],
-  // idDetail: string,
-  // maxImages: number,
-  // indexParent: number,
-  // image: PictureDetail;
   index: number;
   imagesMin: Picture[];
 }

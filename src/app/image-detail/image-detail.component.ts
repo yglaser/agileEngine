@@ -6,7 +6,11 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import {
   NgbCarouselConfig,
   NgbSlideEvent,
@@ -24,62 +28,60 @@ import { ImageService } from 'src/services/image-service.service';
 })
 export class ImageDetailComponent implements OnInit {
   public indexImage = 0;
-  showNavigationArrows = true;
-  showNavigationIndicators = false;
+  public showNavigationArrows = true;
+  public showNavigationIndicators = false;
   public images: PictureDetail[] = [];
   public imageToShow: number;
   public indexSelected = 0;
   public id: string;
   public loading = false;
+  public indexToShow = 0;
+  public actualImage: PictureDetail;
   @Output() idToFind: EventEmitter<string> = new EventEmitter<string>();
   imagesCarrousel: PictureDetail[] = [];
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: DataModal,
     config: NgbCarouselConfig,
+    public dialog: MatDialog,
+    public dialogRef: MatDialogRef<ImageDetailComponent>,
     private imageService: ImageService
   ) {
     this.indexSelected = data.index;
     this.id = data.imagesMin[this.indexSelected].id;
-    this.goToDetails();
+
+    this.goToDetails(this.id);
     config.keyboard = true;
     config.wrap = false;
   }
 
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    if (event.key === KEY_CODE.RIGHT_ARROW) {
-      this.onRight();
-    }
-
-    if (event.key === KEY_CODE.LEFT_ARROW) {
-      this.onLeft();
+    if (event.key === KEY_CODE.KEY_ESC) {
+      this.dialogRef.close();
     }
   }
 
   ngOnInit() {}
-  public onLeft(): void {
-    this.loading = true;
-    this.indexSelected = this.indexSelected === 0 ? 0 : this.indexSelected - 1;
-    this.id = this.data.imagesMin[this.indexSelected].id;
-    this.goToDetails();
+
+  public goToDetails(id) {
+    this.imageService.getPictureById(id).subscribe((image: PictureDetail) => {
+      this.actualImage = image;
+    });
   }
 
-  public onRight(): void {
-    this.loading = true;
-    this.indexSelected = this.indexSelected + 1;
-    this.id = this.data.imagesMin[this.indexSelected].id;
-    this.goToDetails();
-  }
-
-  public goToDetails() {
-    if (this.imagesCarrousel.findIndex((el) => el.id === this.id) === -1) {
-      this.imageService
-        .getPictureById(this.id)
-        .subscribe((image: PictureDetail) => {
-          image.idParentArray = this.indexSelected;
-          this.imagesCarrousel.push(image);
-          this.loading = false;
-        });
+  public onSlide($event: NgbSlideEvent, caro) {
+    this.actualImage = null;
+    console.log($event);
+    if ($event.direction === NgbSlideEventDirection.LEFT) {
+      console.log(this.indexSelected, this.data.imagesMin.length - 1);
+      this.indexSelected =
+        this.indexSelected === this.data.imagesMin.length - 1
+          ? this.indexSelected
+          : this.indexSelected + 1;
+    } else {
+      this.indexSelected =
+        this.indexSelected === 0 ? 0 : this.indexSelected - 1;
     }
   }
 }
