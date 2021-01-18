@@ -1,7 +1,24 @@
-import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
-import { DataModal, PictureDetail } from 'src/models/images';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Inject,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
+import {
+  NgbCarouselConfig,
+  NgbSlideEvent,
+  NgbSlideEventDirection,
+  NgbSlideEventSource,
+} from '@ng-bootstrap/ng-bootstrap';
+import { KEY_CODE } from 'src/constants/keyEnum';
+import { DataModal, Picture, PictureDetail } from 'src/models/images';
 import { ImageService } from 'src/services/image-service.service';
 @Component({
   selector: 'app-image-detail',
@@ -11,51 +28,62 @@ import { ImageService } from 'src/services/image-service.service';
 })
 export class ImageDetailComponent implements OnInit {
   public indexImage = 0;
-  showNavigationArrows = true;
-  showNavigationIndicators = false;
+  public showNavigationArrows = true;
+  public showNavigationIndicators = false;
   public images: PictureDetail[] = [];
   public imageToShow: number;
+  public indexSelected = 0;
+  public id: string;
+  public loading = false;
+  public imagesMin: Picture[] = [];
+  public indexToShow = 0;
+  public actualImage: PictureDetail = null;
   @Output() idToFind: EventEmitter<string> = new EventEmitter<string>();
+  imagesCarrousel: PictureDetail[] = [];
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: PictureDetail,
+    @Inject(MAT_DIALOG_DATA) public data: DataModal,
     config: NgbCarouselConfig,
+    public dialog: MatDialog,
+    public dialogRef: MatDialogRef<ImageDetailComponent>,
     private imageService: ImageService
   ) {
-    /*
-    this.indexImage = data.indexParent;
-    console.log(this.data, this.data.idDetail)
-    this.getImageDetailsById(this.data.idDetail, this.data.indexParent);
-    config.showNavigationArrows = true;
-    config.showNavigationIndicators = true;*/
+    this.imagesMin = this.data.imagesMin;
+    this.indexSelected = data.index;
+    this.id = data.imagesMin[this.indexSelected].id;
+
+    this.goToDetails(this.id);
+    config.keyboard = true;
+    config.wrap = false;
   }
-  ngOnInit() {}
-  /*
-  public goToNextImage(parentId) {
-    this.showNavigationArrows = !this.showNavigationArrows;
-    if (parentId === this.data.picturesMin.length - 1) {
-      this.indexImage = parentId++;
-      if (
-        this.images.findIndex((el) => el.idParentArray === this.indexImage) ===
-        -1
-      ) {
-        const idToFind = this.data.picturesMin[this.indexImage].id;
-        this.getImageDetailsById(idToFind, parentId);
-      }
+
+  @HostListener('window:keydown', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.key === KEY_CODE.KEY_ESC) {
+      this.dialogRef.close();
     }
   }
 
-  public getImageDetailsById(id: string, idParent: number): void {
-    console.log(id)
-    if (this.images.findIndex((el) => el.id === id) === -1) {
-      this.imageService.getPictureById(id).subscribe((el: PictureDetail) => {
-        el.idParentArray = idParent;
-        this.images.push(el);
-      });
-    }
-    this.images.sort((a, b) => {
-      return a.idParentArray - b.idParentArray;
+  ngOnInit() {}
+
+  public goToDetails(id) {
+    this.imageService.getPictureById(id).subscribe((image: PictureDetail) => {
+      this.actualImage = image;
     });
   }
-  */
+
+  public onSlide($event: NgbSlideEvent, caro) {
+    this.actualImage = null;
+    console.log($event);
+    if ($event.direction === NgbSlideEventDirection.LEFT) {
+      console.log(this.indexSelected, this.data.imagesMin.length - 1);
+      this.indexSelected =
+        this.indexSelected === this.data.imagesMin.length - 1
+          ? this.indexSelected
+          : this.indexSelected + 1;
+    } else {
+      this.indexSelected =
+        this.indexSelected === 0 ? 0 : this.indexSelected - 1;
+    }
+  }
 }

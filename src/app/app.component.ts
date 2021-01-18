@@ -25,35 +25,24 @@ export class AppComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.login();
-    if (this.authService.isLoggedIn()) {
+    if (this.authService.isLoggedIn) {
       this.getAllImages(this.actualPage);
     }
   }
 
   public getAllImages(currentPage: number): void {
     this.loading = true;
-    if (this.authService.isLoggedIn) {
-      this.imageService.getAllPictures(currentPage).subscribe(
-        (res: Pictures) => {
-          this.loading = false;
-          this.images.push(...res.pictures);
-          this.morePages = res.hasMore;
-          this.totalPage = res.pageCount;
-        },
-        (err) => {
-          if (err[1].status === 401) {
-            this.login();
-          } else {
-            console.log(err.error);
-            this.login();
-            this.toastService.error('Images', 'Error loading images');
-            this.loading = false;
-          }
-        }
-      );
-    } else {
-      this.login();
-    }
+    this.imageService.getAllPictures(currentPage).subscribe(
+      (res: Pictures) => {
+        this.loading = false;
+        this.images.push(...res.pictures);
+        this.morePages = res.hasMore;
+        this.totalPage = res.pageCount;
+      },
+      (err) => {
+        this.login();
+      }
+    );
   }
   public login(): void {
     this.loading = true;
@@ -63,11 +52,10 @@ export class AppComponent implements OnInit {
     observable.subscribe(
       (response: LoginResponse) => {
         this.authService.saveResLoginData(response);
-        this.loading = false;
+
+        this.getAllImages(this.actualPage);
       },
       (err) => {
-        console.log(err);
-
         this.toastService.error(err.error.messages[0], 'Login Error');
         this.loading = false;
       }
@@ -83,11 +71,5 @@ export class AppComponent implements OnInit {
       this.actualPage++;
       this.getAllImages(this.actualPage);
     }
-  }
-
-  public getImageDetails(id: string) {
-    this.imageService.getPictureById(id).subscribe((res: PictureDetail) => {
-      console.log(res);
-    });
   }
 }

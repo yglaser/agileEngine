@@ -5,9 +5,16 @@
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build",
+    "build-ghpages": "ng build --prod --output-path docs --base-href /agileEngine/",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "heroku-postbuild": "ng build --prod",
+    "postinstall": "ng build --prod"
+  },
+  "engines": {
+    "node": "12.4.0",
+    "npm": "6.9.0"
   },
   "husky": {
     "hooks": {
@@ -31,17 +38,21 @@
     "angular-cli-ghpages": "^0.6.2",
     "bootstrap": "^4.5.3",
     "core-js": "^2.5.4",
+    "express": "^4.17.1",
     "hammerjs": "^2.0.8",
     "husky": "^4.3.7",
     "jquery": "^3.5.1",
+    "ngx-image-zoom": "^0.6.0",
     "ngx-infinite-scroll": "^10.0.1",
     "ngx-toastr": "^10.1.0",
     "node-sass": "^4.14.1",
+    "path": "^0.12.7",
     "popper.js": "^1.16.1",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
     "rxjs": "~6.6.3",
     "tslib": "^1.9.0",
+    "typescript": "~3.5.3",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
@@ -49,10 +60,11 @@
     "@angular/cli": "~8.3.29",
     "@angular/compiler-cli": "~8.2.14",
     "@angular/language-service": "~8.2.14",
-    "@types/node": "~8.9.4",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "~8.9.4",
     "codelyzer": "^5.0.1",
+    "enhanced-resolve": "^3.3.0",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~3.1.1",

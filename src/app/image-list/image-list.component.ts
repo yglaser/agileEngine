@@ -22,7 +22,7 @@ export class ImageListComponent implements OnInit {
   @Input() images: Picture[] = [];
   @Input() hasMore: boolean;
   @Output() hasToScroll: EventEmitter<boolean> = new EventEmitter<boolean>();
-
+  public id: string;
   public pictureDetail: PictureDetail[] = [];
   public modalIsOpen: boolean;
   constructor(public dialog: MatDialog, private imageService: ImageService) {}
@@ -34,10 +34,7 @@ export class ImageListComponent implements OnInit {
 
   @HostListener('window:keydown', ['$event'])
   keyEvent(event: KeyboardEvent) {
-    console.log(event);
-
     if (event.key === KEY_CODE.RIGHT_ARROW) {
-      console.log('entro...');
       if (!this.modalIsOpen) {
         this.onRight();
       }
@@ -48,37 +45,36 @@ export class ImageListComponent implements OnInit {
         this.onLeft();
       }
     }
+
+    if (event.key === KEY_CODE.KEY_ENTER) {
+      if (!this.modalIsOpen) {
+        this.goToDetails(this.id, this.indexSelected);
+      }
+    }
   }
 
   public onLeft(): void {
     this.indexSelected = this.indexSelected === 0 ? 0 : this.indexSelected - 1;
-    const id = this.images[this.indexSelected].cropped_picture;
-    console.log(id, this.indexSelected);
-    this.goToDetails(id, this.indexSelected);
+    this.id = this.images[this.indexSelected].cropped_picture;
   }
 
   public onRight(): void {
-    console.log('probandooo ....');
     this.indexSelected = this.indexSelected + 1;
-    const id = this.images[this.indexSelected].id;
-    console.log(id, this.indexSelected);
-    this.goToDetails(id, this.indexSelected);
+    this.id = this.images[this.indexSelected].id;
   }
   public goToDetails(id, i) {
     this.indexSelected = i;
-    this.imageService.getPictureById(id).subscribe((image: PictureDetail) => {
-      const dialog = this.dialog.open(ImageDetailComponent, {
-        panelClass: 'custom-dialog-container',
-        disableClose: true,
-        hasBackdrop: false,
+    const dialog = this.dialog.open(ImageDetailComponent, {
+      panelClass: 'custom-dialog-container',
+      disableClose: true,
+      hasBackdrop: false,
 
-        data: image,
-      });
-
-      dialog.afterOpened().subscribe((el) => (this.modalIsOpen = true));
-      dialog.afterClosed().subscribe((el) => (this.modalIsOpen = false));
-
-      console.log(dialog);
+      data: {
+        index: this.indexSelected,
+        imagesMin: this.images,
+      },
     });
+    dialog.afterOpened().subscribe((el) => (this.modalIsOpen = true));
+    dialog.afterClosed().subscribe((el) => (this.modalIsOpen = false));
   }
 }

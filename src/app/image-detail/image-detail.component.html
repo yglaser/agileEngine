@@ -1,12 +1,37 @@
-<div>
-  <img
-    class="row d-flex d-inline justify-content-end"
-    [mat-dialog-close]="true"
-    style="color: #707070"
-    mat-list-icon
-    src="assets/img/close-black.svg"
-    alt="close"
-  />
+<ng-container>
+  <ngb-carousel #caro (slide)="onSlide($event, caro)" *ngIf="imagesMin">
+    <div class="mb-2 row d-flex d-inline justify-content-end">
+      <img
+        [mat-dialog-close]="true"
+        style="color: #707070"
+        mat-list-icon
+        src="assets/img/close-black.svg"
+        alt="close"
+      />
+    </div>
 
-  <img [src]="data.full_picture" class="img-responsive" />
-</div>
+    <ng-template ngbSlide *ngFor="let image of data.imagesMin; let i = index">
+      <ng-container *ngIf="actualImage; else carrousel">
+        <div class="picsum-img-wrapper">
+          <lib-ngx-image-zoom
+            [thumbImage]="actualImage.cropped_picture"
+            [fullImage]="actualImage.full_picture"
+          ></lib-ngx-image-zoom>
+        </div>
+        <div class="carousel-caption">
+          <p class="py-0 my-0">
+            Author: {{ actualImage.author }} <br />
+            Camera: {{ actualImage.camera }} <br />
+            {{ actualImage.tags }}<br />
+          </p>
+        </div>
+      </ng-container>
+      <ng-template #carrousel>
+        <img
+          [src]="image.cropped_picture"
+          (mouseover)="this.goToDetails(image.id)"
+        />
+      </ng-template>
+    </ng-template>
+  </ngb-carousel>
+</ng-container>

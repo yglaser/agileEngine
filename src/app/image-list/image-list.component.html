@@ -1,10 +1,10 @@
-<div
-  class="container"
-  infiniteScroll
-  [infiniteScrollDistance]="8"
-  (scrolled)="onScroll()"
->
-  <ng-container *ngIf="images.length > 0; else spinner">
+<ng-container *ngIf="!loading; else spinner">
+  <div
+    class="container"
+    infiniteScroll
+    [infiniteScrollDistance]="8"
+    (scrolled)="onScroll()"
+  >
     <div class="mt-2">
       <div class="row row-eq-height d-flex justify-content-center">
         <div
@@ -21,6 +21,20 @@
         </div>
       </div>
     </div>
-  </ng-container>
-</div>
-<ng-template #spinner> Loading ... </ng-template>
+  </div>
+</ng-container>
+<ng-template #spinner>
+  <div
+    class="container d-flex flex-column justify-content-between align-content-center w-100 h-100"
+  >
+    <div
+      class="container d-flex flex-column justify-content-between align-content-center"
+    >
+      <div class="spinner-border float-right" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div>Loading ...</div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #tipContent> </ng-template>
