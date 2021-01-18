@@ -13,10 +13,10 @@ export class ApiEndpoint {
   }
 
   public get LOGIN() {
-    return `/auth`;
+    return `${this.env}/auth`;
   }
 
   public get PICTURE() {
-    return `/images`;
+    return `${this.env}/images`;
   }
 }
