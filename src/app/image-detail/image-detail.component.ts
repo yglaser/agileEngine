@@ -18,7 +18,7 @@ import {
   NgbSlideEventSource,
 } from '@ng-bootstrap/ng-bootstrap';
 import { KEY_CODE } from 'src/constants/keyEnum';
-import { DataModal, PictureDetail } from 'src/models/images';
+import { DataModal, Picture, PictureDetail } from 'src/models/images';
 import { ImageService } from 'src/services/image-service.service';
 @Component({
   selector: 'app-image-detail',
@@ -35,8 +35,9 @@ export class ImageDetailComponent implements OnInit {
   public indexSelected = 0;
   public id: string;
   public loading = false;
+  public imagesMin: Picture[] = [];
   public indexToShow = 0;
-  public actualImage: PictureDetail;
+  public actualImage: PictureDetail = null;
   @Output() idToFind: EventEmitter<string> = new EventEmitter<string>();
   imagesCarrousel: PictureDetail[] = [];
 
@@ -47,6 +48,7 @@ export class ImageDetailComponent implements OnInit {
     public dialogRef: MatDialogRef<ImageDetailComponent>,
     private imageService: ImageService
   ) {
+    this.imagesMin = this.data.imagesMin;
     this.indexSelected = data.index;
     this.id = data.imagesMin[this.indexSelected].id;
 
