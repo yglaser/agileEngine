@@ -19,7 +19,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged && ng lint ",
-      "pre-push": "npm run build && ng test"
+      "pre-push": "npm run build"
     }
   },
   "private": true,
