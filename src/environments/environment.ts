@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  API: 'http://interview.agileengine.com',
+  API: '',
 };
 
 /*
