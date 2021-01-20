@@ -26,6 +26,7 @@ import { ImageDetailModule } from './image-detail/image-detail.module';
     CoremodulelibModule.forRoot(environment.API),
     ImageListModule,
     ImageDetailModule,
+    MatCardModule,
   ],
 
   providers: [

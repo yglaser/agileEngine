@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { Picture, PictureDetail, Pictures } from 'src/models/images';
 import { Login, LoginResponse } from 'src/models/login';
 import { ImageService } from 'src/services/image-service.service';
@@ -11,18 +11,24 @@ import { ToastService } from 'src/services/toast-service.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   public loading: boolean;
   public images: Picture[] = [];
   public actualPage = 1;
   public morePages = true;
   public totalPage: number;
   public title = 'agileTest';
+  public arraySucriptions: Subscription[] = [];
   constructor(
     private authService: AuthenticationService,
     private toastService: ToastService,
     private imageService: ImageService
   ) {}
+  ngOnDestroy(): void {
+    if (this.arraySucriptions) {
+      this.arraySucriptions.forEach((el) => el.unsubscribe());
+    }
+  }
   ngOnInit(): void {
     this.login();
     if (this.authService.isLoggedIn) {
@@ -32,7 +38,7 @@ export class AppComponent implements OnInit {
 
   public getAllImages(currentPage: number): void {
     this.loading = true;
-    this.imageService.getAllPictures(currentPage).subscribe(
+    const susc = this.imageService.getAllPictures(currentPage).subscribe(
       (res: Pictures) => {
         this.loading = false;
         this.images.push(...res.pictures);
@@ -43,13 +49,14 @@ export class AppComponent implements OnInit {
         this.login();
       }
     );
+    this.arraySucriptions.push(susc);
   }
   public login(): void {
     this.loading = true;
     let observable: Observable<LoginResponse>;
     const loginData: Login = { apiKey: '23567b218376f79d9415' };
     observable = this.authService.login(loginData);
-    observable.subscribe(
+    const susc = observable.subscribe(
       (response: LoginResponse) => {
         this.authService.saveResLoginData(response);
 
@@ -60,6 +67,7 @@ export class AppComponent implements OnInit {
         this.loading = false;
       }
     );
+    this.arraySucriptions.push(susc);
   }
 
   public onScroll(): void {

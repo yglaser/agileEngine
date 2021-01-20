@@ -3,6 +3,7 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
@@ -11,13 +12,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { ImageDetailComponent } from '../image-detail/image-detail.component';
 import { ImageService } from 'src/services/image-service.service';
 import { KEY_CODE } from 'src/constants/keyEnum';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-image-list',
   templateUrl: './image-list.component.html',
   styleUrls: ['./image-list.component.scss'],
 })
-export class ImageListComponent implements OnInit {
+export class ImageListComponent implements OnInit, OnDestroy {
   @Input() loading: boolean;
   @Input() images: Picture[] = [];
   @Input() hasMore: boolean;
@@ -25,8 +27,15 @@ export class ImageListComponent implements OnInit {
   public id: string;
   public pictureDetail: PictureDetail[] = [];
   public modalIsOpen: boolean;
-  constructor(public dialog: MatDialog, private imageService: ImageService) {}
+  public arraySucriptions: Subscription[] = [];
   public indexSelected = 0;
+  constructor(public dialog: MatDialog, private imageService: ImageService) {}
+
+  ngOnDestroy(): void {
+    if (this.arraySucriptions) {
+      this.arraySucriptions.forEach((el) => el.unsubscribe());
+    }
+  }
   ngOnInit() {}
   public onScroll() {
     this.hasToScroll.emit(true);
@@ -74,7 +83,12 @@ export class ImageListComponent implements OnInit {
         imagesMin: this.images,
       },
     });
-    dialog.afterOpened().subscribe((el) => (this.modalIsOpen = true));
-    dialog.afterClosed().subscribe((el) => (this.modalIsOpen = false));
+    const susc = dialog
+      .afterOpened()
+      .subscribe((el) => (this.modalIsOpen = true));
+    const susc1 = dialog
+      .afterClosed()
+      .subscribe((el) => (this.modalIsOpen = false));
+    this.arraySucriptions.push(...[susc, susc1]);
   }
 }

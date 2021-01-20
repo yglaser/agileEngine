@@ -1,4 +1,4 @@
-<ng-container *ngIf="!loading; else spinner">
+<ng-container *ngIf="images.length; else spinner">
   <div
     class="container"
     infiniteScroll
@@ -24,16 +24,14 @@
   </div>
 </ng-container>
 <ng-template #spinner>
-  <div
-    class="container d-flex flex-column justify-content-between align-content-center w-100 h-100"
-  >
+  <div class="h-100 w-100 custom-loading">
     <div
-      class="container d-flex flex-column justify-content-between align-content-center"
+      class="mt-2 container d-flex flex-column justify-content-center align-items-center"
     >
-      <div class="spinner-border float-right" role="status">
-        <span class="sr-only">Loading...</span>
+      <div class="spinner-border text-color float-right" role="status">
+        <span class="text-color sr-only">Loading...</span>
       </div>
-      <div>Loading ...</div>
+      <div class="h5 text-color pt-2 mt-2">Loading ...</div>
     </div>
   </div>
 </ng-template>
