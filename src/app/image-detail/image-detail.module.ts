@@ -6,13 +6,25 @@ import {
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { ImageDetailComponent } from './image-detail.component';
-
+import { PinchZoomModule } from 'ngx-pinch-zoom';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { BrowserModule } from '@angular/platform-browser';
+import {
+  BrowserAnimationsModule,
+  NoopAnimationsModule,
+} from '@angular/platform-browser/animations';
 
-import { NgxImageZoomModule } from 'ngx-image-zoom';
 @NgModule({
   declarations: [ImageDetailComponent],
-  imports: [CommonModule, MatDialogModule, NgbModule, NgxImageZoomModule],
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    NgbModule,
+    BrowserAnimationsModule,
+    BrowserModule,
+    NoopAnimationsModule,
+    PinchZoomModule,
+  ],
   providers: [
     { provide: MAT_DIALOG_DATA, useValue: {} },
     { provide: MatDialogRef, useValue: {} },

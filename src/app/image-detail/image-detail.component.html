@@ -1,37 +1,65 @@
 <ng-container>
-  <ngb-carousel #caro (slide)="onSlide($event, caro)" *ngIf="imagesMin">
-    <div class="mb-2 row d-flex d-inline justify-content-end">
-      <img
-        [mat-dialog-close]="true"
-        style="color: #707070"
-        mat-list-icon
-        src="assets/img/close-black.svg"
-        alt="close"
-      />
-    </div>
+  <div *ngIf="imagesCarrousel">
+    <div *ngFor="let image of imagesCarrousel; let i = index">
+      <div
+        class="d-flex flex-row flex-row-reverse"
+        [@myInsertRemoveTrigger]
+        *ngIf="i === indexToShow"
+      >
+        <span class="icons-images left icons-images material-icons">
+          close
+        </span>
+        <div
+          class="d-flex flex-column align-items-center justify-content-center"
+        >
+          <div
+            class="parent picsum-img-wrapper flex-column flex-wrap justify-content-center"
+          >
+            <div class="d-flex align-items-center flex-wrap">
+              <span
+                (click)="goToPrev(image.idParentArray, i)"
+                class="icons-images left material-icons"
+              >
+                chevron_left
+              </span>
 
-    <ng-template ngbSlide *ngFor="let image of data.imagesMin; let i = index">
-      <ng-container *ngIf="actualImage; else carrousel">
-        <div class="picsum-img-wrapper">
-          <lib-ngx-image-zoom
-            [thumbImage]="actualImage.cropped_picture"
-            [fullImage]="actualImage.full_picture"
-          ></lib-ngx-image-zoom>
+              <pinch-zoom>
+                <div class="d-flex flex-row-reverse">
+                  <span
+                    class="icons-images right d-flex align-items-end material-icons"
+                  >
+                    close
+                  </span>
+                  <img [src]="image.full_picture" />
+                </div>
+              </pinch-zoom>
+              <span
+                (click)="goToNext(image.idParentArray)"
+                class="icons-images right material-icons"
+              >
+                chevron_right
+              </span>
+            </div>
+            <div
+              class="text-images center pl-2 d-flex align-items-start justify-content-center flex-column"
+            >
+              <p class="text-hashtags text-left p-0 mb-0">
+                Author: {{ image.author }}
+              </p>
+              <p class="text-hashtags text-left p-0 mb-0">
+                Camera: {{ image.camera }}
+              </p>
+              <p class="text-hashtags text-left p-0 mb-0">{{ image.tags }}</p>
+              <span
+                (click)="copyText(image.full_picture)"
+                class="copy-link right material-icons"
+              >
+                content_copy
+              </span>
+            </div>
+          </div>
         </div>
-        <div class="carousel-caption">
-          <p class="py-0 my-0">
-            Author: {{ actualImage.author }} <br />
-            Camera: {{ actualImage.camera }} <br />
-            {{ actualImage.tags }}<br />
-          </p>
-        </div>
-      </ng-container>
-      <ng-template #carrousel>
-        <img
-          [src]="image.cropped_picture"
-          (mouseover)="this.goToDetails(image.id)"
-        />
-      </ng-template>
-    </ng-template>
-  </ngb-carousel>
+      </div>
+    </div>
+  </div>
 </ng-container>

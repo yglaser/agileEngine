@@ -1,15 +1,24 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div class="container">
-  <div class="mt-4 light-grey-background p-2 p-lg-0">
-    <h5 class="pb-1 d-flex justify-content-center font-weight-normal mb-3">
-      Images Galery
-    </h5>
-    <app-image-list
-      (hasToScroll)="onScroll()"
-      [loading]="loading"
-      [images]="images"
-    ></app-image-list>
-    <!--
+
+<div class="bg-overlay"></div>
+
+<div class="container mt-4">
+  <div class="mt-4 main-container p-2 p-lg-0">
+    <mat-card class="mt-5">
+      <h3
+        class="my-4 pb-1 d-flex text-color border-bottom justify-content-center font-weight-normal mb-3"
+      >
+        Images Galery
+      </h3>
+      <app-image-list
+        (hasToScroll)="onScroll()"
+        [loading]="loading"
+        [images]="images"
+      ></app-image-list>
+    </mat-card>
+  </div>
+
+  <!--
        <div class="mt-2">
       <div class="row row-eq-height d-flex justify-content-center">
         <div
@@ -23,6 +32,5 @@
       </div>
     </div>
     -->
-  </div>
 </div>
 <router-outlet></router-outlet>
